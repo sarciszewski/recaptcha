@@ -47,9 +47,9 @@ class MailHide
         $ky = \pack('H*', $privkey);
         $cryptmail = self::_aes_encrypt ($email, $ky);
 
-        return "http://www.google.com/recaptcha/mailhide/d?k=" . 
-            $pubkey . 
-            "&c=" . 
+        return "http://www.google.com/recaptcha/mailhide/d?k=" .
+            $pubkey .
+            "&c=" .
             self::_urlbase64($cryptmail);
     }
 

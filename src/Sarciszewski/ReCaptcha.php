@@ -38,14 +38,14 @@ class ReCaptcha
 {
     private $public_key = null;
     private $private_key = null;
-    
+
     /**
      * The reCAPTCHA server URL's
      */
     const API_SERVER = "http://www.google.com/recaptcha/api";
     const API_SECURE_SERVER = "https://www.google.com/recaptcha/api";
     const VERIFY_SERVER = "www.google.com";
-    
+
     public function __construct($public = null, $private = null)
     {
         if (!empty($public)) {
@@ -55,7 +55,7 @@ class ReCaptcha
             $this->private_key = $private;
         }
     }
-    
+
     /**
      * Encodes the given data into a query string format
      * @param $data - array of string elements to be encoded
