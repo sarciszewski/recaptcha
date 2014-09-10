@@ -1,6 +1,6 @@
 <?php
 
-namespace sarciszewski;
+namespace Sarciszewski;
 
 /* This is a PHP library that handles calling reCAPTCHA.
  *    - Documentation and latest version
@@ -36,12 +36,25 @@ namespace sarciszewski;
  */
 class ReCaptcha
 {
+    private $public_key = null;
+    private $private_key = null;
+    
     /**
      * The reCAPTCHA server URL's
      */
     const API_SERVER = "http://www.google.com/recaptcha/api";
     const API_SECURE_SERVER = "https://www.google.com/recaptcha/api";
     const VERIFY_SERVER = "www.google.com";
+    
+    public function __construct($public = null, $private = null)
+    {
+        if (!empty($public)) {
+            $this->public_key = $public;
+        }
+        if (!empty($private)) {
+            $this->private_key = $private;
+        }
+    }
     
     /**
      * Encodes the given data into a query string format
@@ -119,12 +132,15 @@ class ReCaptcha
      * @return string - The HTML to be embedded in the user's form.
      * @throws ReCaptchaException
      */
-    public static function get_html($pubkey, $error = null, $use_ssl = true)
+    public function get_html($pubkey = '', $error = null, $use_ssl = true)
     {
-        if ($pubkey == null || $pubkey == '') {
-            throw new ReCaptchaException(
-                "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>"
-            );
+        if (empty($pubkey)) {
+            if (empty($this->public_key)) {
+                throw new ReCaptchaException(
+                    "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>"
+                );
+            }
+            $pubkey = $this->public_key;
         }
         if ($use_ssl) {
             $server = self::API_SECURE_SERVER;
@@ -154,25 +170,28 @@ class ReCaptcha
       * @return ReCaptchaResponse
       * @throws ReCaptchaException
       */
-    public static function check_answer(
-        $privkey,
-        $remoteip,
-        $challenge,
-        $response,
+    public function check_answer(
+        $privkey = '',
+        $remoteip = '',
+        $challenge = '',
+        $response = '',
         $extra_params = array()
     ) {
-        if ($privkey == null || $privkey == '') {
-            throw new ReCaptchaException(
-                "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>"
-            );
+        if (empty($privkey)) {
+            if (empty($this->private_key)) {
+                throw new ReCaptchaException(
+                    "To use reCAPTCHA you must get an API key from <a href='https://www.google.com/recaptcha/admin/create'>https://www.google.com/recaptcha/admin/create</a>"
+                );
+            }
+            $privkey = $this->private_key;
         }
-        if ($remoteip == null || $remoteip == '') {
+        if (empty($remoteip)) {
             throw new ReCaptchaException(
                 "For security reasons, you must pass the remote ip to reCAPTCHA"
             );
         }
         // discard spam submissions
-        if ($challenge == null || \strlen($challenge) === 0 || empty($response)) {
+        if (empty($challenge) || empty($response)) {
                 $recaptcha_response = new ReCaptchaResponse();
                 $recaptcha_response->is_valid = false;
                 $recaptcha_response->error = 'incorrect-captcha-sol';
@@ -209,7 +228,7 @@ class ReCaptcha
      * @param string $domain The domain where the page is hosted
      * @param string $appname The name of your application
      */
-    public static function get_signup_url ($domain = null, $appname = null) {
+    public function get_signup_url ($domain = null, $appname = null) {
         return "https://www.google.com/recaptcha/admin/create?" . self::_qsencode (
             array (
                 'domains' => $domain,
