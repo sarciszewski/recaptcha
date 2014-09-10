@@ -5,7 +5,7 @@ spl_autoload_register(function($class) {
     $prefix = 'sarciszewski\\';
 
     // base directory for the namespace prefix
-    $base_dir = __DIR__."/src/sarciszewski/";
+    $base_dir = __DIR__."/src/Sarciszewski/";
 
     // does the class use the namespace prefix?
     $len = strlen($prefix);
