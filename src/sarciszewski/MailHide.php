@@ -4,7 +4,6 @@ namespace sarciszewski;
 
 class MailHide
 {
-
     protected static function _aes_pad($val)
     {
         $block_size = 16;
@@ -82,14 +81,14 @@ class MailHide
     public static function html($pubkey, $privkey, $email)
     {
         $emailparts = self::_email_parts ($email);
-        $url = self::url ($pubkey, $privkey, $email);
+        $url = self::url($pubkey, $privkey, $email);
 
-        return self::escapeAttribute($emailparts[0]) .
+        return ReCaptcha::escapeAttribute($emailparts[0]) .
             "<a href='" .
-            self::escapeAttribute($url) .
+            ReCaptcha::escapeAttribute($url) .
             "' onclick=\"window.open('" .
-            self::escapeAttribute($url) .
+            ReCaptcha::escapeAttribute($url) .
             "', '', 'toolbar=0,scrollbars=0,location=0,statusbar=0,menubar=0,resizable=0,width=500,height=300'); return false;\" title=\"Reveal this e-mail address\">...</a>@" .
-            self::escapeAttribute($emailparts[1]);
+            ReCaptcha::escapeAttribute($emailparts[1]);
     }
 }
