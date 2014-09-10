@@ -1,6 +1,6 @@
 <?php
 
-namespace sarciszewski;
+namespace Sarciszewski;
 
 class ReCaptchaException extends \Exception
 {
