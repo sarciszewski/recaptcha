@@ -162,21 +162,27 @@ class ReCaptcha
 
     /**
       * Calls an HTTP POST function to verify if the user's guess was correct
-      * @param string $privkey
-      * @param string $remoteip
       * @param string $challenge
       * @param string $response
+      * @param string $privkey
+      * @param string $remoteip
       * @param array $extra_params an array of extra variables to post to the server
       * @return ReCaptchaResponse
       * @throws ReCaptchaException
       */
     public function check_answer(
-        $privkey = '',
-        $remoteip = '',
         $challenge = '',
         $response = '',
+        $privkey = '',
+        $remoteip = '',
         $extra_params = array()
     ) {
+        if (empty($challenge)) {
+            $challenge = $_POST['recaptcha_challenge_field'];
+        }
+        if (empty($response)) {
+            $response = $_POST['recaptcha_response_field'];
+        }
         if (empty($privkey)) {
             if (empty($this->private_key)) {
                 throw new ReCaptchaException(
@@ -186,9 +192,10 @@ class ReCaptcha
             $privkey = $this->private_key;
         }
         if (empty($remoteip)) {
-            throw new ReCaptchaException(
+            /*throw new ReCaptchaException(
                 "For security reasons, you must pass the remote ip to reCAPTCHA"
-            );
+            );*/
+            $remote = $_SERVER['REMOTE_ADDR'];
         }
         // discard spam submissions
         if (empty($challenge) || empty($response)) {
